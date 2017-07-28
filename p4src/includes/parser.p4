@@ -40,7 +40,7 @@ parser parse_ethernet {
 
 #define MPLS_BOS current(23,1)
 
-#define MPLS_DEPTH 3
+#define MPLS_DEPTH 4 
 
 header mpls_t mpls[MPLS_DEPTH];
 
@@ -53,14 +53,13 @@ parser parse_mpls {
 	}
 }
 
-#define VLAN_DEPTH 3
+#define VLAN_DEPTH 2
 header vlan_tag_t vlan[VLAN_DEPTH];
+
 parser parse_vlan {
     extract(vlan[next]);
-//	set_metadata(mpls_lookup_m.vlan_id, latest.vid);
-    return select(latest.etherType){
-		ETHERTYPE_VLAN : parse_vlan;
-		default : ingress;
+	return select(latest.etherType){
+        ETHERTYPE_VLAN : parse_vlan;
+        default: ingress;
 	}
 }
-
