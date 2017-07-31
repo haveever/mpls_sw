@@ -23,9 +23,6 @@ parser start {
     return parse_ethernet;
 }
 
-#define ETHERTYPE_VLAN 0x8100
-#define ETHERTYPE_IPV4 0x0800
-#define ETHERTYPE_MPLS 0x8847
 
 header ethernet_t ethernet;
 
@@ -60,6 +57,7 @@ parser parse_vlan {
     extract(vlan[next]);
 	return select(latest.etherType){
         ETHERTYPE_VLAN : parse_vlan;
+        ETHERTYPE_MPLS : parse_mpls;
         default: ingress;
 	}
 }

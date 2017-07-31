@@ -19,6 +19,12 @@ limitations under the License.
 
 // Here's an ethernet header to get started.
 
+#define ETHERTYPE_VLAN 0x8100
+#define ETHERTYPE_IPV4 0x0800
+#define ETHERTYPE_MPLS 0x8847
+
+#define MPLS_TTL_DEFAULT 64
+
 header_type ethernet_t {
     fields {
         dstAddr : 48;
