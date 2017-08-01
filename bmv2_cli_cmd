@@ -1,0 +1,10 @@
+table_add check_vlan_table check_vlan_match_a 1 0 0 =>
+table_add check_vlan_table check_mpls_match_a 1 1 1 =>
+
+table_add ler_ingress_table ler_ingress_match_a 2121 0 => 7 0 8 0 8
+
+
+table_add lsr_swap_table lsr_mpls_swap_a 7 => 17 0 1
+
+table_add ler_egress_table ler_egress_mpls_match_a 17 8 => 3
+

@@ -39,7 +39,7 @@ action check_mpls_match_a()
 	modify_field(mpls_lookup_m.vp_label, mpls[0].exp);
 }
 
-action ler_ingress_match_a(vc_label, vc_exp, vp_label, vp_exp, outport)
+action ler_ingress_match_a(vp_label, vp_exp, vc_label, vc_exp, outport)
 {
 	modify_field(vlan[0].etherType, ETHERTYPE_MPLS);
 
@@ -86,7 +86,7 @@ table lsr_swap_table{
 	}
 }
 
-action ler_mpls_match_a(outport){
+action ler_egress_mpls_match_a(outport){
 
 	remove_header(mpls[1]);
 	remove_header(mpls[0]);
@@ -102,7 +102,7 @@ table ler_egress_table{
 		mpls[1].label : exact;
 	}
 	actions {
-		ler_mpls_match_a;
+		ler_egress_mpls_match_a;
 		nop;
 	}
 }
@@ -118,16 +118,11 @@ control ingress{
 		{
 			apply(lsr_swap_table)
 			{
-				hit{
-					
-				}
-				miss{
+				miss
+				{
 					apply(ler_egress_table);	
 				}
 			}
-		}
-		default
-		{
 		}
 	}
 
