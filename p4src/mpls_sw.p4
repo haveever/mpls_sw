@@ -9,13 +9,21 @@ action nop()
 }
 
 action check_vlan_match_a(){
+	count(vlan_valid_c, 0);
 	modify_field(mpls_lookup_m.vlan_id, vlan[0].vid);
 	modify_field(mpls_lookup_m.inport,ig_intr_md.ingress_port);
 }
 
 counter vlan_valid_c{
 	type : packets;
-	direct : check_vlan_table;
+	static : check_vlan_table;
+	instance_count : 1;
+}
+
+counter mpls_valid_c{
+	type : packets;
+	static : check_vlan_table;
+	instance_count : 1;
 }
 
 table check_vlan_table{
@@ -33,6 +41,7 @@ table check_vlan_table{
 
 action check_mpls_match_a()
 {
+	count(mpls_valid_c, 0);
 	modify_field(mpls_lookup_m.vc_label, mpls[1].label);
 	modify_field(mpls_lookup_m.vc_exp, mpls[1].exp);
 	modify_field(mpls_lookup_m.vp_label, mpls[0].label);

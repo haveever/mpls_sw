@@ -8,3 +8,17 @@ table_add lsr_swap_table lsr_mpls_swap_a 7 => 17 0 1
 
 table_add ler_egress_table ler_egress_mpls_match_a 17 8 => 3
 
+
+sudo python 1sw_demo.py --behavioral-exe /home/wunan/bf_sde/bf-sde-4.1.1.15/install/bin/tofinobmv2 --json install/share/tofinobmpd/mpls_sw/mpls_sw.json
+
+s1(ler ingress):
+table_add check_vlan_table check_vlan_match_a 1 0 0 =>
+table_add ler_ingress_table ler_ingress_match_a 2121 2 => 7 0 8 0 1
+
+s2(lsr):
+table_add check_vlan_table check_mpls_match_a 1 1 1 =>
+table_add lsr_swap_table lsr_mpls_swap_a 7 => 17 0 2
+
+s3(ler egress):
+table_add check_vlan_table check_mpls_match_a 1 1 1 =>
+table_add ler_egress_table ler_egress_mpls_match_a 17 8 => 2
